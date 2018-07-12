@@ -74,7 +74,6 @@ body {background-color: black;}
 <body onload="startTime()">
 <div class="orologio" id="orologio"></div>
 
-
 <div id='container'>
   <p> PANINO_A   </p>
   <button class="button, minus" onclick="decrease_a()">-</button>
@@ -133,18 +132,29 @@ document.getElementById("i").innerHTML = i_count;
 </script>
 <!-- ================================================================ -->
 
-
+<!-- <p> In bocca al lupo fringuelli!  </p> -->
 
 <script>
+function flush_local_storage(){
+  localStorage.a_count = 0
+  localStorage.b_count = 0
+  a_count = 0
+  b_count = 0
+  document.getElementById("a").innerHTML = localStorage.a_count;
+  document.getElementById("b").innerHTML = localStorage.b_count;
+}
+
 function startTime() {
+  var weekday=["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"]
     var today = new Date();
     var h = today.getHours();
     var m = today.getMinutes();
     var s = today.getSeconds();
+    var d = weekday[today.getDay()];
     m = checkTime(m);
     s = checkTime(s);
     document.getElementById('orologio').innerHTML =
-    h + ":" + m + ":" + s;
+    d + " - " + h + ":" + m //+ ":" + s;
     var t = setTimeout(startTime, 500);
 }
 function checkTime(i) {
@@ -154,6 +164,9 @@ function checkTime(i) {
 
 
 </script>
+
+
+<button class="button, minus" ondblclick="flush_local_storage()">double click to RESET </button>
 
 </body>
 </html>
