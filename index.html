@@ -3,7 +3,7 @@
 <style>
 p {
   display: inline-block;
-  font-size: 40px;
+  font-size: 80px;
   padding: 20px;
   margin: 0;
   color: white;
@@ -13,46 +13,32 @@ p {
 body {background-color: black;}
 
 .button {
-    position: relative;
-    background-color: #4CAF50;
-    border: none;
-    font-size: 40px;
-    font-weight:  bold;
-    color: #FFFFFF;
-    padding: 4px;
-    width: 100px;
-    height: 70px;
-    text-align: center;
-    -webkit-transition-duration: 4s; /* Safari */
-    transition-duration: 4s;
-    text-decoration: none;
-    overflow: hidden;
-    cursor: pointer;
+  display: inline-block;
+  padding: 2px 50px 2px 50px;
+  margin: 20px;
+  font-size: 80px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
 }
 
-.button:after {
-    content: "";
-    background: yellow;
-    display: block;
-    position: absolute;
-    padding-top: 300%;
-    padding-left: 350%;
-    margin-left: -20px !important;
-    margin-top: -120%;
-    opacity: 0;
-    transition: all 0.8s
-}
+.button:hover {background-color: #3e8e41}
 
-.button:active:after {
-    padding: 0;
-    margin: 0;
-    opacity: 1;
-    transition:
+.button:active {
+  background-color: #3e8e41;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
 }
 
 .orologio{
   display: inline-block;
-  font-size: 40px;
+  font-size: 80px;
   padding: 10px;
   margin: 0;
   text-align: center;
