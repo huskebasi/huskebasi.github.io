@@ -28,6 +28,11 @@ body {background-color: black;}
   box-shadow: 0 9px #999;
 }
 
+.button:active {
+  background-color: blue;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
 
 .orologio{
   display: inline-block;
@@ -40,6 +45,27 @@ body {background-color: black;}
   font-weight: bold;
 }
 
+.minus{
+  display: inline-block;
+  padding: 2px 50px 2px 50px;
+  margin: 20px;
+  font-size: 70px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: red;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+}
+
+.minus:active {
+  background-color: orange;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
 </style>
 <body>
 
@@ -49,86 +75,51 @@ body {background-color: black;}
 <div class="orologio" id="orologio"></div>
 
 
-
 <div id='container'>
   <p> PANINO_A   </p>
-  <button class="button" onclick="decrease_a()">-</button>
+  <button class="button, minus" onclick="decrease_a()">-</button>
   <p id="a"></p>
   <button class="button" onclick="increase_a()">+</button>
 </div>
 <script>
-var a_count = 0;
+var a_count = localStorage.a_count == null ? 0 : parseInt(localStorage.a_count);
 function decrease_a(){
-	a_count -= 1;
-	document.getElementById("a").innerHTML = a_count;
+  a_count -= 1;
+  localStorage.a_count = a_count;
+  document.getElementById("a").innerHTML = a_count;
 }
 function increase_a(){
-	a_count += 1;
-	document.getElementById("a").innerHTML = a_count;
+  a_count += 1;
+  localStorage.a_count = a_count;
+  document.getElementById("a").innerHTML = a_count;
 }
 document.getElementById("a").innerHTML = a_count;
 </script>
 <!-- ================================================================ -->
 <div id='container'>
   <p> PANINO_B   </p>
-  <button class="button" onclick="decrease_b()">-</button>
+  <button class="button, minus" onclick="decrease_b()">-</button>
   <p id="b"></p>
   <button class="button" onclick="increase_b()">+</button>
 </div>
 <script>
-var b_count = 0;
+var b_count = localStorage.b_count == null ? 0 : parseInt(localStorage.b_count);
 function decrease_b(){
-	b_count -= 1;
-	document.getElementById("b").innerHTML = b_count;
+  b_count -= 1;
+  localStorage.b_count = b_count;
+  document.getElementById("b").innerHTML = b_count;
 }
 function increase_b(){
-	b_count += 1;
-	document.getElementById("b").innerHTML = b_count;
+  b_count += 1;
+  localStorage.b_count = b_count;
+  document.getElementById("b").innerHTML = b_count;
 }
 document.getElementById("b").innerHTML = b_count;
 </script>
 <!-- ================================================================ -->
 <div id='container'>
-  <p> PANINO_C   </p>
-  <button class="button" onclick="decrease_c()">-</button>
-  <p id="c"></p>
-  <button class="button" onclick="increase_c()">+</button>
-</div>
-<script>
-var c_count = 0;
-function decrease_c(){
-	c_count -= 1;
-	document.getElementById("c").innerHTML = c_count;
-}
-function increase_c(){
-	c_count += 1;
-	document.getElementById("c").innerHTML = c_count;
-}
-document.getElementById("c").innerHTML = c_count;
-</script>
-<!-- ================================================================ -->
-<div id='container'>
-  <p> PANINO_D   </p>
-  <button class="button" onclick="decrease_d()">-</button>
-  <p id="d"></p>
-  <button class="button" onclick="increase_d()">+</button>
-</div>
-<script>
-var d_count = 0;
-function decrease_d(){
-	d_count -= 1;
-	document.getElementById("d").innerHTML = d_count;
-}
-function increase_d(){
-	d_count += 1;
-	document.getElementById("d").innerHTML = d_count;
-}
-document.getElementById("d").innerHTML = d_count;
-</script>
-<!-- ================================================================ -->
-<div id='container'>
   <p> -- ILARDI -  </p>
-  <button class="button" onclick="decrease_i()">-</button>
+  <button class="button, minus" onclick="decrease_i()">-</button>
   <p id="i"></p>
   <button class="button" onclick="increase_i()">+</button>
 </div>
