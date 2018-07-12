@@ -1,1 +1,169 @@
-HELLO world
+<!DOCTYPE html>
+<html>
+<style>
+p {
+  display: inline-block;
+  padding: 10px;
+  margin: 0;
+  color: white;
+}
+
+
+body {background-color: black;}
+
+.button {
+    position: relative;
+    background-color: #4CAF50;
+    border: none;
+    font-size: 20px;
+    color: #FFFFFF;
+    padding: 2px;
+    width: 40px;
+    text-align: center;
+    -webkit-transition-duration: 4s; /* Safari */
+    transition-duration: 4s;
+    text-decoration: none;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.button:after {
+    content: "";
+    background: yellow;
+    display: block;
+    position: absolute;
+    padding-top: 300%;
+    padding-left: 350%;
+    margin-left: -20px !important;
+    margin-top: -120%;
+    opacity: 0;
+    transition: all 0.8s
+}
+
+.button:active:after {
+    padding: 0;
+    margin: 0;
+    opacity: 1;
+    transition:
+}
+
+.orologio{
+  display: inline-block;
+  padding: 10px;
+  margin: 0;
+  text-align: center;
+  margin-left: 60px !important;
+  color: yellow;
+  font-weight: bold;
+}
+
+</style>
+<body>
+
+
+
+<body onload="startTime()">
+<div class="orologio" id="orologio"></div>
+
+
+
+<div id='container'>
+  <p> PANINO_A   </p>
+  <button class="button" onclick="decrease_a()">-</button>
+  <p id="a"></p>
+  <button class="button" onclick="increase_a()">+</button>
+</div>
+<script>
+var a_count = 0;
+function decrease_a(){
+	a_count -= 1;
+	document.getElementById("a").innerHTML = a_count;
+}
+function increase_a(){
+	a_count += 1;
+	document.getElementById("a").innerHTML = a_count;
+}
+document.getElementById("a").innerHTML = a_count;
+</script>
+<!-- ================================================================ -->
+<div id='container'>
+  <p> PANINO_B   </p>
+  <button class="button" onclick="decrease_b()">-</button>
+  <p id="b"></p>
+  <button class="button" onclick="increase_b()">+</button>
+</div>
+<script>
+var b_count = 0;
+function decrease_b(){
+	b_count -= 1;
+	document.getElementById("b").innerHTML = b_count;
+}
+function increase_b(){
+	b_count += 1;
+	document.getElementById("b").innerHTML = b_count;
+}
+document.getElementById("b").innerHTML = b_count;
+</script>
+<!-- ================================================================ -->
+<div id='container'>
+  <p> PANINO_C   </p>
+  <button class="button" onclick="decrease_c()">-</button>
+  <p id="c"></p>
+  <button class="button" onclick="increase_c()">+</button>
+</div>
+<script>
+var c_count = 0;
+function decrease_c(){
+	c_count -= 1;
+	document.getElementById("c").innerHTML = c_count;
+}
+function increase_c(){
+	c_count += 1;
+	document.getElementById("c").innerHTML = c_count;
+}
+document.getElementById("c").innerHTML = c_count;
+</script>
+<!-- ================================================================ -->
+<div id='container'>
+  <p> PANINO_D   </p>
+  <button class="button" onclick="decrease_d()">-</button>
+  <p id="d"></p>
+  <button class="button" onclick="increase_d()">+</button>
+</div>
+<script>
+var d_count = 0;
+function decrease_d(){
+	d_count -= 1;
+	document.getElementById("d").innerHTML = d_count;
+}
+function increase_d(){
+	d_count += 1;
+	document.getElementById("d").innerHTML = d_count;
+}
+document.getElementById("d").innerHTML = d_count;
+</script>
+<!-- ================================================================ -->
+
+
+<script>
+function startTime() {
+    var today = new Date();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    var s = today.getSeconds();
+    m = checkTime(m);
+    s = checkTime(s);
+    document.getElementById('orologio').innerHTML =
+    h + ":" + m + ":" + s;
+    var t = setTimeout(startTime, 500);
+}
+function checkTime(i) {
+    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+    return i;
+}
+
+
+</script>
+
+</body>
+</html>
