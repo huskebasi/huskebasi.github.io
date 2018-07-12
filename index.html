@@ -1,5 +1,8 @@
 <!DOCTYPE html>
 <html>
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
 <style>
 p {
   display: inline-block;
@@ -157,6 +160,7 @@ function startTime() {
     d + " - " + h + ":" + m //+ ":" + s;
     var t = setTimeout(startTime, 500);
 }
+
 function checkTime(i) {
     if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
     return i;
@@ -165,8 +169,7 @@ function checkTime(i) {
 
 </script>
 
-
-<button class="button, minus" ondblclick="flush_local_storage()">double click to RESET </button>
+<button class="button, minus" onclick="flush_local_storage()">click to RESET </button>
 
 </body>
 </html>
