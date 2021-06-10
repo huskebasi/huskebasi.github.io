@@ -106,9 +106,9 @@ function showPosition(position) {
   
   data = $.ajax(settings).done(function (response) { response.extremes.map(x => [x.datetime.slice(11,16) + " " + x.state.split(/\s+/)[0] + " " + x.height.toFixed(2)] + " m") } )
 
-  // if (data.length == undefined) {
+  if (data.length == undefined) {
     data = ["SAMPLE DATA","02:25 LOW -0.09 m","08:19 HIGH 0.11 m","14:16 LOW -0.15 m"]
-  // }
+  }
 
   var list = document.createElement("ul");
   for (let i of data) {
