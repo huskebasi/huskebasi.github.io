@@ -24,7 +24,7 @@ body {background-color: black;}
 
 .orologio{
   /*display: inline-block;*/
-  font-size: 35px;
+  font-size: 40px;
   padding: 5px;
   margin: 0;
   /*text-align: center;*/
@@ -34,8 +34,8 @@ body {background-color: black;}
 }
 
 .coord{
-  display: inline-block;
-  font-size: 20px;
+  /*display: inline-block;*/
+  font-size: 30px;
   padding: 5px;
   margin: 0;
   color: white;
@@ -52,18 +52,30 @@ ul{
 <body>
 
 
-<body onload="getLocation()">
-<div class ="container">
-  <div>  <p class ="orologio" id="orologio"></p> </div>
-  <div>  <p class="coord" id="demo" onclick="getLocation()"></p></div>
+<body onload="start()">
+<div class ="container" onclick="getLocation()">
+  <p class ="orologio" id="orologio"></p>
+
+  <p class="coord" id="demo"></p>
   <div id='tidedata'></div>
 </div>
 <!-- <button class="button, minus" onclick="getLocation()"> - </button> -->
 <script>
+
 function checkTime(i) {
     if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
     return i;
 }
+
+function start() {
+  startTime();
+  if (localStorage.lat == undefined || localStorage.lon == undefined){
+    console.log("localStorage.lat is undefined, updating...")
+    getLocation()
+  }
+  draw()
+}
+
 function startTime() {
   var weekday=["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"]
     var today = new Date();
@@ -77,47 +89,65 @@ function startTime() {
     var t = setTimeout(startTime, 500);
 }
 
+
 function getLocation() {
-  document.getElementById("tidedata").innerHTML = ""
-  startTime();
+  console.log("calling getLocation")
   if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(showPosition);
+    navigator.geolocation.getCurrentPosition(update_position);
   } else { 
     document.getElementById("demo").innerHTML = "Geolocation is not supported by this browser.";
   }
 }
 
+function update_position(position){
+  console.log("calling update_position")
+  d = new Date()
+  localStorage.d   = d.getDate()+"/"+checkTime((d.getMonth()+1))+"/"+d.getFullYear()+" "+d.getHours()+":"+checkTime(d.getMinutes())+":"+checkTime(d.getSeconds())
+  localStorage.lat = position.coords.latitude.toFixed(4)
+  localStorage.lon = position.coords.longitude.toFixed(4)
+  get_tide_data()
+  draw()
+}
 
-function showPosition(position) {
-  document.getElementById("demo").innerHTML = "["+ position.coords.latitude.toFixed(3) + ", " + position.coords.longitude.toFixed(3) + "]"
+function draw() {
+  document.getElementById("demo").innerHTML = localStorage.d + " ["+ localStorage.lat + ", " + localStorage.lon + "]"
+  document.getElementById("tidedata").innerHTML = ""
+  if (localStorage.tidedata == undefined) {
+    get_tide_data()
+  }
+
+  var list = document.createElement("ul");
+  for (let i of JSON.parse(localStorage.tidedata) ) {
+    let item = document.createElement("li");
+    item.innerHTML = i;
+    list.appendChild(item);
+  }
+  document.getElementById("tidedata").appendChild(list);
+}
+
+function get_tide_data() {
+  console.log("calling get_tide_data")
+  lat = localStorage.lat
+  lon = localStorage.lon
 
   settings = {
     "async": true,
     "crossDomain": true,
-    "url": "https://tides.p.rapidapi.com/tides?latitude="+position.coords.latitude+"&longitude="+position.coords.longitude+"&duration=1440&interval=60",
+    "url": "https://tides.p.rapidapi.com/tides?latitude="+lat+"&longitude="+lon+"&duration=1440&interval=60",
     "method": "GET",
     "headers": {
       "x-rapidapi-key": "fbf93a6482mshd1b9ac4b389f5d3p195c26jsn2d4bc217232b",
       "x-rapidapi-host": "tides.p.rapidapi.com"
     }
   }
-    
-  
-  
+
   data = $.ajax(settings).done(function (response) { response.extremes.map(x => [x.datetime.slice(11,16) + " " + x.state.split(/\s+/)[0] + " " + x.height.toFixed(2)] + " m") } )
 
   if (data.length == undefined) {
     data = ["SAMPLE DATA","02:25 LOW -0.09 m","08:19 HIGH 0.11 m","14:16 LOW -0.15 m"]
   }
 
-  var list = document.createElement("ul");
-  for (let i of data) {
-    let item = document.createElement("li");
-    item.innerHTML = i;
-    list.appendChild(item);
-  }
-  document.getElementById("tidedata").appendChild(list);
-
+  localStorage.tidedata = JSON.stringify(data)
 }
 
 </script>
