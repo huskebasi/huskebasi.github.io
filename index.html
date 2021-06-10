@@ -18,72 +18,42 @@ p {
 
 body {background-color: black;}
 
-.button {
-  display: inline-block;
-  padding: 2px 50px 2px 50px;
-  margin: 20px;
-  font-size: 70px;
-  cursor: pointer;
-  text-align: center;
-  text-decoration: none;
-  outline: none;
-  color: #fff;
-  background-color: #4CAF50;
-  border: none;
-  border-radius: 15px;
-  box-shadow: 0 9px #999;
-}
-
-.button:active {
-  background-color: blue;
-  box-shadow: 0 5px #666;
-  transform: translateY(4px);
-}
 
 .orologio{
-  display: inline-block;
-  font-size: 70px;
-  padding: 10px;
+  /*display: inline-block;*/
+  font-size: 35px;
+  padding: 5px;
   margin: 0;
   text-align: center;
-  margin-left: 200px !important;
+  /*margin-left: 200px !important;*/
   color: yellow;
   font-weight: bold;
 }
 
-.minus{
+.coord{
   display: inline-block;
-  padding: 2px 50px 2px 50px;
-  margin: 20px;
-  font-size: 70px;
-  cursor: pointer;
+  font-size: 20px;
+  padding: 5px;
+  margin: 0;
+  color: white;
   text-align: center;
-  text-decoration: none;
-  outline: none;
-  color: #fff;
-  background-color: red;
-  border: none;
-  border-radius: 15px;
-  box-shadow: 0 9px #999;
 }
 
-.minus:active {
-  background-color: orange;
-  box-shadow: 0 5px #666;
-  transform: translateY(4px);
-}
 </style>
 <body>
 
 
 <body onload="getLocation()">
-<div class="orologio" id="orologio"></div>
-
+<div>
+  <p class ="orologio" id="orologio"></p>
+</div>
+<div>
+  <p class="coord" id="demo" onclick="getLocation()"></p>
+</div>
 <div id='container'>
-  <p id="demo"></p>
   <p id="tidedata"></p>
 </div>
-<button class="button, minus" onclick="getLocation()">click to RESET </button>
+<!-- <button class="button, minus" onclick="getLocation()"> - </button> -->
 <script>
 function checkTime(i) {
     if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
@@ -98,12 +68,12 @@ function startTime() {
     var d = weekday[today.getDay()];
     m = checkTime(m);
     s = checkTime(s);
-    document.getElementById('orologio').innerHTML =
-    h + ":" + m + ":" + s;
+    document.getElementById('orologio').innerHTML = h + ":" + m + ":" + s;
     var t = setTimeout(startTime, 500);
 }
 
 function getLocation() {
+  document.getElementById("tidedata").innerHTML = ""
   startTime();
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(showPosition);
@@ -139,7 +109,7 @@ function showPosition(position) {
     })
   });
 
-  document.getElementById("demo").innerHTML = position.coords.latitude.toFixed(3) + ", " + position.coords.longitude.toFixed(3)
+  document.getElementById("demo").innerHTML = "["+ position.coords.latitude.toFixed(3) + ", " + position.coords.longitude.toFixed(3) + "]"
 }
 
 </script>
