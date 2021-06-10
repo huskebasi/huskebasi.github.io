@@ -18,13 +18,16 @@ p {
 
 body {background-color: black;}
 
+.container{
+  text-align: center;
+}
 
 .orologio{
   /*display: inline-block;*/
   font-size: 35px;
   padding: 5px;
   margin: 0;
-  text-align: center;
+  /*text-align: center;*/
   /*margin-left: 200px !important;*/
   color: yellow;
   font-weight: bold;
@@ -36,7 +39,13 @@ body {background-color: black;}
   padding: 5px;
   margin: 0;
   color: white;
-  text-align: center;
+  /*text-align: center;*/
+}
+
+ul{
+  list-style-type: none;
+  color: white;
+  font-size: 20px;
 }
 
 </style>
@@ -44,14 +53,10 @@ body {background-color: black;}
 
 
 <body onload="getLocation()">
-<div>
-  <p class ="orologio" id="orologio"></p>
-</div>
-<div>
-  <p class="coord" id="demo" onclick="getLocation()"></p>
-</div>
-<div id='container'>
-  <p id="tidedata"></p>
+<div class ="container">
+  <div>  <p class ="orologio" id="orologio"></p> </div>
+  <div>  <p class="coord" id="demo" onclick="getLocation()"></p></div>
+  <div id='tidedata'></div>
 </div>
 <!-- <button class="button, minus" onclick="getLocation()"> - </button> -->
 <script>
@@ -84,8 +89,8 @@ function getLocation() {
 
 
 function showPosition(position) {
- console.log("Latitude: " + position.coords.latitude + " Longitude: " + position.coords.longitude)
- console.log("https://tides.p.rapidapi.com/tides?latitude="+position.coords.latitude+"&longitude="+position.coords.longitude+"&duration=1440&interval=60")
+  document.getElementById("demo").innerHTML = "["+ position.coords.latitude.toFixed(3) + ", " + position.coords.longitude.toFixed(3) + "]"
+
   settings = {
     "async": true,
     "crossDomain": true,
@@ -96,20 +101,23 @@ function showPosition(position) {
       "x-rapidapi-host": "tides.p.rapidapi.com"
     }
   }
+    
+  
+  
+  data = $.ajax(settings).done(function (response) { response.extremes.map(x => [x.datetime.slice(11,16) + " " + x.state.split(/\s+/)[0] + " " + x.height.toFixed(2)] + " m") } )
 
-  $.ajax(settings).done(function (response) {
-    console.log(response);
-    data = response.extremes.map(x => [x.datetime.slice(11,16) + " " + x.state.split(/\s+/)[0] + " " + x.height.toFixed(2)] + " m")
-    // document.getElementById("tidedata").innerHTML = data.join("\n")
-    let list = document.getElementById("tidedata");
-    data.forEach((item)=>{
-      let li = document.createElement("li");
-      li.innerText = item;
-      list.appendChild(li);
-    })
-  });
+  // if (data.length == undefined) {
+    data = ["SAMPLE DATA","02:25 LOW -0.09 m","08:19 HIGH 0.11 m","14:16 LOW -0.15 m"]
+  // }
 
-  document.getElementById("demo").innerHTML = "["+ position.coords.latitude.toFixed(3) + ", " + position.coords.longitude.toFixed(3) + "]"
+  var list = document.createElement("ul");
+  for (let i of data) {
+    let item = document.createElement("li");
+    item.innerHTML = i;
+    list.appendChild(item);
+  }
+  document.getElementById("tidedata").appendChild(list);
+
 }
 
 </script>
