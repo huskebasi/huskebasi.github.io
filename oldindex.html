@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html>
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+
+<style>
+p {
+  display: inline-block;
+  font-size: 70px;
+  padding: 20px;
+  margin: 0;
+  color: white;
+}
+
+
+body {background-color: black;}
+
+.button {
+  display: inline-block;
+  padding: 2px 50px 2px 50px;
+  margin: 20px;
+  font-size: 70px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: #4CAF50;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+}
+
+.button:active {
+  background-color: blue;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+
+.orologio{
+  display: inline-block;
+  font-size: 70px;
+  padding: 10px;
+  margin: 0;
+  text-align: center;
+  margin-left: 200px !important;
+  color: yellow;
+  font-weight: bold;
+}
+
+.minus{
+  display: inline-block;
+  padding: 2px 50px 2px 50px;
+  margin: 20px;
+  font-size: 70px;
+  cursor: pointer;
+  text-align: center;
+  text-decoration: none;
+  outline: none;
+  color: #fff;
+  background-color: red;
+  border: none;
+  border-radius: 15px;
+  box-shadow: 0 9px #999;
+}
+
+.minus:active {
+  background-color: orange;
+  box-shadow: 0 5px #666;
+  transform: translateY(4px);
+}
+</style>
+<body>
+
+
+
+<body onload="startTime()">
+<div class="orologio" id="orologio"></div>
+
+<div id='container'>
+  <p> PANINO_A   </p>
+  <button class="button, minus" onclick="decrease_a()">-</button>
+  <p id="a"></p>
+  <button class="button" onclick="increase_a()">+</button>
+</div>
+<script>
+var a_count = localStorage.a_count == null ? 0 : parseInt(localStorage.a_count);
+function decrease_a(){
+  a_count -= 1;
+  localStorage.a_count = a_count;
+  document.getElementById("a").innerHTML = a_count;
+}
+function increase_a(){
+  a_count += 1;
+  localStorage.a_count = a_count;
+  document.getElementById("a").innerHTML = a_count;
+}
+document.getElementById("a").innerHTML = a_count;
+</script>
+<!-- ================================================================ -->
+<div id='container'>
+  <p> PANINO_B   </p>
+  <button class="button, minus" onclick="decrease_b()">-</button>
+  <p id="b"></p>
+  <button class="button" onclick="increase_b()">+</button>
+</div>
+<script>
+var b_count = localStorage.b_count == null ? 0 : parseInt(localStorage.b_count);
+function decrease_b(){
+  b_count -= 1;
+  localStorage.b_count = b_count;
+  document.getElementById("b").innerHTML = b_count;
+}
+function increase_b(){
+  b_count += 1;
+  localStorage.b_count = b_count;
+  document.getElementById("b").innerHTML = b_count;
+}
+document.getElementById("b").innerHTML = b_count;
+</script>
+<!-- ================================================================ -->
+<div id='container'>
+  <p> -- ILARDI -  </p>
+  <button class="button, minus" onclick="decrease_i()">-</button>
+  <p id="i"></p>
+  <button class="button" onclick="increase_i()">+</button>
+</div>
+<script>
+var i_count = 4;
+function decrease_i(){
+}
+function increase_i(){
+}
+document.getElementById("i").innerHTML = i_count;
+</script>
+<!-- ================================================================ -->
+
+<!-- <p> In bocca al lupo fringuelli!  </p> -->
+
+<script>
+function flush_local_storage(){
+  localStorage.a_count = 0
+  localStorage.b_count = 0
+  a_count = 0
+  b_count = 0
+  document.getElementById("a").innerHTML = localStorage.a_count;
+  document.getElementById("b").innerHTML = localStorage.b_count;
+}
+
+function startTime() {
+  var weekday=["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"]
+    var today = new Date();
+    var h = today.getHours();
+    var m = today.getMinutes();
+    var s = today.getSeconds();
+    var d = weekday[today.getDay()];
+    m = checkTime(m);
+    s = checkTime(s);
+    document.getElementById('orologio').innerHTML =
+    d + " - " + h + ":" + m //+ ":" + s;
+    var t = setTimeout(startTime, 500);
+}
+
+function checkTime(i) {
+    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+    return i;
+}
+
+
+</script>
+
+<button class="button, minus" onclick="flush_local_storage()">click to RESET </button>
+
+</body>
+</html>

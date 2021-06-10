@@ -6,7 +6,7 @@
 <style>
 p {
   display: inline-block;
-  font-size: 70px;
+  font-size: 35px;
   padding: 20px;
   margin: 0;
   color: white;
@@ -73,80 +73,19 @@ body {background-color: black;}
 <body>
 
 
-
-<body onload="startTime()">
+<body onload="getLocation()">
 <div class="orologio" id="orologio"></div>
 
 <div id='container'>
-  <p> PANINO_A   </p>
-  <button class="button, minus" onclick="decrease_a()">-</button>
-  <p id="a"></p>
-  <button class="button" onclick="increase_a()">+</button>
+  <p id="demo"></p>
+  <p id="tidedata"></p>
 </div>
+<button class="button, minus" onclick="getLocation()">click to RESET </button>
 <script>
-var a_count = localStorage.a_count == null ? 0 : parseInt(localStorage.a_count);
-function decrease_a(){
-  a_count -= 1;
-  localStorage.a_count = a_count;
-  document.getElementById("a").innerHTML = a_count;
+function checkTime(i) {
+    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+    return i;
 }
-function increase_a(){
-  a_count += 1;
-  localStorage.a_count = a_count;
-  document.getElementById("a").innerHTML = a_count;
-}
-document.getElementById("a").innerHTML = a_count;
-</script>
-<!-- ================================================================ -->
-<div id='container'>
-  <p> PANINO_B   </p>
-  <button class="button, minus" onclick="decrease_b()">-</button>
-  <p id="b"></p>
-  <button class="button" onclick="increase_b()">+</button>
-</div>
-<script>
-var b_count = localStorage.b_count == null ? 0 : parseInt(localStorage.b_count);
-function decrease_b(){
-  b_count -= 1;
-  localStorage.b_count = b_count;
-  document.getElementById("b").innerHTML = b_count;
-}
-function increase_b(){
-  b_count += 1;
-  localStorage.b_count = b_count;
-  document.getElementById("b").innerHTML = b_count;
-}
-document.getElementById("b").innerHTML = b_count;
-</script>
-<!-- ================================================================ -->
-<div id='container'>
-  <p> -- ILARDI -  </p>
-  <button class="button, minus" onclick="decrease_i()">-</button>
-  <p id="i"></p>
-  <button class="button" onclick="increase_i()">+</button>
-</div>
-<script>
-var i_count = 4;
-function decrease_i(){
-}
-function increase_i(){
-}
-document.getElementById("i").innerHTML = i_count;
-</script>
-<!-- ================================================================ -->
-
-<!-- <p> In bocca al lupo fringuelli!  </p> -->
-
-<script>
-function flush_local_storage(){
-  localStorage.a_count = 0
-  localStorage.b_count = 0
-  a_count = 0
-  b_count = 0
-  document.getElementById("a").innerHTML = localStorage.a_count;
-  document.getElementById("b").innerHTML = localStorage.b_count;
-}
-
 function startTime() {
   var weekday=["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"]
     var today = new Date();
@@ -157,19 +96,50 @@ function startTime() {
     m = checkTime(m);
     s = checkTime(s);
     document.getElementById('orologio').innerHTML =
-    d + " - " + h + ":" + m //+ ":" + s;
+    h + ":" + m + ":" + s;
     var t = setTimeout(startTime, 500);
 }
 
-function checkTime(i) {
-    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
-    return i;
+function getLocation() {
+  startTime();
+  if (navigator.geolocation) {
+    navigator.geolocation.getCurrentPosition(showPosition);
+  } else { 
+    document.getElementById("demo").innerHTML = "Geolocation is not supported by this browser.";
+  }
 }
 
 
-</script>
+function showPosition(position) {
+ console.log("Latitude: " + position.coords.latitude + " Longitude: " + position.coords.longitude)
+ console.log("https://tides.p.rapidapi.com/tides?latitude="+position.coords.latitude+"&longitude="+position.coords.longitude+"&duration=1440&interval=60")
+  settings = {
+    "async": true,
+    "crossDomain": true,
+    "url": "https://tides.p.rapidapi.com/tides?latitude="+position.coords.latitude+"&longitude="+position.coords.longitude+"&duration=1440&interval=60",
+    "method": "GET",
+    "headers": {
+      "x-rapidapi-key": "fbf93a6482mshd1b9ac4b389f5d3p195c26jsn2d4bc217232b",
+      "x-rapidapi-host": "tides.p.rapidapi.com"
+    }
+  }
 
-<button class="button, minus" onclick="flush_local_storage()">click to RESET </button>
+  $.ajax(settings).done(function (response) {
+    console.log(response);
+    data = response.extremes.map(x => [x.datetime.slice(11,16) + " " + x.state.split(/\s+/)[0] + " " + x.height.toFixed(2)] + " m")
+    // document.getElementById("tidedata").innerHTML = data.join("\n")
+    let list = document.getElementById("tidedata");
+    data.forEach((item)=>{
+      let li = document.createElement("li");
+      li.innerText = item;
+      list.appendChild(li);
+    })
+  });
+
+  document.getElementById("demo").innerHTML = position.coords.latitude.toFixed(3) + ", " + position.coords.longitude.toFixed(3)
+}
+
+</script>
 
 </body>
 </html>
