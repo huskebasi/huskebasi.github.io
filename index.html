@@ -20,6 +20,7 @@ body {background-color: black;}
 
 .container{
   text-align: center;
+  /*color: red;*/
 }
 
 .orologio{
@@ -38,13 +39,13 @@ body {background-color: black;}
   font-size: 30px;
   padding: 5px;
   margin: 0;
-  color: white;
+  /*color: white;*/
   /*text-align: center;*/
 }
 
 ul{
   list-style-type: none;
-  color: white;
+  /*color: white;*/
   font-size: 25px;
 }
 
@@ -67,7 +68,7 @@ function checkTime(i) {
 }
 
 function start() {
-  startTime();
+  startTime()
   if (localStorage.lat == undefined || localStorage.lon == undefined){
     console.log("localStorage.lat is undefined, updating...")
     getLocation()
@@ -85,7 +86,15 @@ function startTime() {
     m = checkTime(m);
     s = checkTime(s);
     document.getElementById('orologio').innerHTML = h + ":" + m + ":" + s;
-    var t = setTimeout(startTime, 500);
+
+    if ( Date.parse(today)-Date.parse(JSON.parse(localStorage.d)) > 1000 * 60 * 60 * 12) {
+      document.getElementById('demo').style.color = "red";
+      document.getElementById('tidedata').style.color = "red";
+    } else {
+      document.getElementById('demo').style.color = "white";
+      document.getElementById('tidedata').style.color = "white";
+    }
+    setTimeout(startTime, 1000);
 }
 
 
@@ -101,7 +110,8 @@ function getLocation() {
 function update_position(position){
   console.log("calling update_position")
   d = new Date()
-  localStorage.d   = d.getDate()+"/"+checkTime((d.getMonth()+1))+"/"+d.getFullYear()+" "+d.getHours()+":"+checkTime(d.getMinutes())+":"+checkTime(d.getSeconds())
+  localStorage.d = JSON.stringify(d)
+  // localStorage.d   = 
   localStorage.lat = position.coords.latitude.toFixed(4)
   localStorage.lon = position.coords.longitude.toFixed(4)
   get_tide_data()
@@ -109,7 +119,11 @@ function update_position(position){
 }
 
 function draw() {
-  document.getElementById("demo").innerHTML = localStorage.d + " ["+ localStorage.lat + ", " + localStorage.lon + "]"
+  
+  var d = new Date(JSON.parse(localStorage.d))
+  var datetime = d.getDate()+"/"+checkTime((d.getMonth()+1))+"/"+d.getFullYear()+" "+d.getHours()+":"+checkTime(d.getMinutes())+":"+checkTime(d.getSeconds())
+
+  document.getElementById("demo").innerHTML = datetime + " ["+ localStorage.lat + ", " + localStorage.lon + "]"
   document.getElementById("tidedata").innerHTML = ""
   if (localStorage.tidedata == undefined) {
     get_tide_data()
