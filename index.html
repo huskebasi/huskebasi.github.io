@@ -68,7 +68,6 @@ function checkTime(i) {
 }
 
 function start() {
-      localStorage.d = JSON.stringify(new Date())
   startTime()
   if (localStorage.lat == undefined || localStorage.lon == undefined){
     console.log("localStorage.lat is undefined, updating...")
@@ -87,13 +86,13 @@ function startTime() {
     m = checkTime(m);
     s = checkTime(s);
     document.getElementById('orologio').innerHTML = h + ":" + m + ":" + s;
-    // if ( Date.parse(today)-Date.parse(JSON.parse(localStorage.d)) > 1000 * 10) {
-      // document.getElementById('demo').style.color = "red";
-      // document.getElementById('tidedata').style.color = "red";
-    // } else {
-      // document.getElementById('demo').style.color = "white";
-      // document.getElementById('tidedata').style.color = "white";
-    // }
+    if ( Date.parse(today)-Date.parse(JSON.parse(localStorage.d)) > 1000 * 10) {
+      document.getElementById('demo').style.color = "red";
+      document.getElementById('tidedata').style.color = "red";
+    } else {
+      document.getElementById('demo').style.color = "white";
+      document.getElementById('tidedata').style.color = "white";
+    }
 
     setTimeout(startTime, 500);
 }
