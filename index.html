@@ -4,7 +4,7 @@
 <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
 <script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></scrip -->
 <script language="JavaScript" type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-<script language="JavaScript" type="text/javascript" src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+<!-- <script language="JavaScript" type="text/javascript" src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script> -->
 
 <style>
 p {
@@ -94,6 +94,7 @@ function startTime() {
       document.getElementById('demo').style.color = "white";
       document.getElementById('tidedata').style.color = "white";
     }
+
     setTimeout(startTime, 1000);
 }
 
@@ -146,7 +147,7 @@ function get_tide_data() {
   settings = {
     "async": true,
     "crossDomain": true,
-    "url": "https://tides.p.rapidapi.com/tides?latitude="+lat+"&longitude="+lon+"&duration=1440&interval=60",
+    "url": "https://tides.p.rapidapi.com/tides?latitude="+lat+"&longitude="+lon+"&duration=4320&interval=60",
     "method": "GET",
     "headers": {
       "x-rapidapi-key": "fbf93a6482mshd1b9ac4b389f5d3p195c26jsn2d4bc217232b",
