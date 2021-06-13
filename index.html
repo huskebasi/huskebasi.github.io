@@ -75,7 +75,7 @@ ul{
 
 <div class ="container" onclick="getLocation()">
   <p class="coord" id="demo"></p>
-  <p id="loader"></p>
+  <div><p id="loader"></p></div>
   <div id='tidedata'></div>
 </div>
 <!-- <button class="button, minus" onclick="getLocation()"> - </button> -->
@@ -119,7 +119,8 @@ function startTime() {
 
 function getLocation() {
   console.log("calling getLocation")
-  document.getElementById("loader").style.display = "block";
+  document.getElementById("loader").style.display = "inline-block";
+  document.getElementById("demo").style.display = "none";
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(update_position);
   } else { 
@@ -155,6 +156,7 @@ function draw() {
   }
   document.getElementById("tidedata").appendChild(list);
   document.getElementById("loader").style.display = "none";
+  document.getElementById("demo").style.display = "inline-block";
 }
 
 function get_tide_data() {
