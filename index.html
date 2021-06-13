@@ -49,14 +49,32 @@ ul{
   font-size: 25px;
 }
 
+#loader {
+  border: 2px solid #f3f3f3; /* Light grey */
+  border-top: 2px solid #3498db; /* Blue */
+  border-radius: 50%;
+  width: 0px;
+  height: 0px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
 </style>
 <body>
 
 
 <body onload="start()">
 <p class ="orologio" id="orologio"></p>
+
+
+
 <div class ="container" onclick="getLocation()">
   <p class="coord" id="demo"></p>
+  <p id="loader"></p>
   <div id='tidedata'></div>
 </div>
 <!-- <button class="button, minus" onclick="getLocation()"> - </button> -->
@@ -100,6 +118,7 @@ function startTime() {
 
 function getLocation() {
   console.log("calling getLocation")
+  document.getElementById("loader").style.display = "block";
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(update_position);
   } else { 
@@ -118,7 +137,6 @@ function update_position(position){
 }
 
 function draw() {
-  
   var d = new Date(JSON.parse(localStorage.d))
   var datetime = d.getDate()+"/"+checkTime((d.getMonth()+1))+"/"+d.getFullYear()+" "+d.getHours()+":"+checkTime(d.getMinutes())+":"+checkTime(d.getSeconds())
 
@@ -135,6 +153,7 @@ function draw() {
     list.appendChild(item);
   }
   document.getElementById("tidedata").appendChild(list);
+  document.getElementById("loader").style.display = "none";
 }
 
 function get_tide_data() {
