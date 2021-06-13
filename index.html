@@ -68,6 +68,7 @@ function checkTime(i) {
 }
 
 function start() {
+      localStorage.d = JSON.stringify(new Date())
   startTime()
   if (localStorage.lat == undefined || localStorage.lon == undefined){
     console.log("localStorage.lat is undefined, updating...")
@@ -86,7 +87,6 @@ function startTime() {
     m = checkTime(m);
     s = checkTime(s);
     document.getElementById('orologio').innerHTML = h + ":" + m + ":" + s;
-
     // if ( Date.parse(today)-Date.parse(JSON.parse(localStorage.d)) > 1000 * 10) {
       // document.getElementById('demo').style.color = "red";
       // document.getElementById('tidedata').style.color = "red";
@@ -112,7 +112,6 @@ function update_position(position){
   console.log("calling update_position")
   d = new Date()
   localStorage.d = JSON.stringify(d)
-  // localStorage.d   = 
   localStorage.lat = position.coords.latitude.toFixed(4)
   localStorage.lon = position.coords.longitude.toFixed(4)
   get_tide_data()
