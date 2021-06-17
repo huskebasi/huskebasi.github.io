@@ -73,6 +73,7 @@ ul{
 <p class ="orologio" id="orologio" onclick="getLocation()"></p>
 <div class ="container" onclick="getLocation()">
   <p class="coord" id="demo"></p>
+  <p class="coord" id="geolocation"></p>
   <div><p id="loader"></p></div>
   <div id='tidedata'></div>
 </div>
@@ -103,12 +104,14 @@ function startTime() {
     m = checkTime(m);
     s = checkTime(s);
     document.getElementById('orologio').innerHTML = h + ":" + m + ":" + s;
-    if ( Date.parse(today)-Date.parse(JSON.parse(localStorage.d)) > 1000 * 10) {
+    if ( Date.parse(today)-Date.parse(JSON.parse(localStorage.d)) > 1000 * 3600 * 24) {
       document.getElementById('demo').style.color = "red";
       document.getElementById('tidedata').style.color = "red";
+      document.getElementById('geolocation').style.color = "red";
     } else {
       document.getElementById('demo').style.color = "white";
       document.getElementById('tidedata').style.color = "white";
+      document.getElementById('geolocation').style.color = "white";
     }
 
     setTimeout(startTime, 500);
@@ -132,6 +135,15 @@ function update_position(position){
   localStorage.d = JSON.stringify(d)
   localStorage.lat = position.coords.latitude.toFixed(4)
   localStorage.lon = position.coords.longitude.toFixed(4)
+
+  settings = {
+    "async": true,
+    "crossDomain": true,
+    "url": "https://eu1.locationiq.com/v1/reverse.php?key=pk.d98f446ddb42dffdd524224ce437b547&lat="+position.coords.latitude+"&lon="+position.coords.longitude+"&format=json",
+    "method": "GET",
+  }
+  data = $.ajax(settings).done(function (response) {   
+  	localStorage.location = response.address.city +", "+response.address.state +", "+response.address.country  } )
   get_tide_data()
   draw()
 }
@@ -140,7 +152,8 @@ function draw() {
   var d = new Date(JSON.parse(localStorage.d))
   var datetime = d.getDate()+"/"+checkTime((d.getMonth()+1))+"/"+d.getFullYear()+" "+d.getHours()+":"+checkTime(d.getMinutes())+":"+checkTime(d.getSeconds())
 
-  document.getElementById("demo").innerHTML = datetime + " ["+ localStorage.lat + ", " + localStorage.lon + "]"
+  document.getElementById("demo").innerHTML = datetime + " ["+ localStorage.lat + ", " + localStorage.lon + "] "
+  document.getElementById("geolocation").innerHTML = localStorage.location
   document.getElementById("tidedata").innerHTML = ""
   if (localStorage.tidedata == undefined) {
     get_tide_data()
