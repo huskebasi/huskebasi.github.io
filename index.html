@@ -145,6 +145,7 @@ function update_position(position){
   }
   data = $.ajax(settings).done(function (response) {   
   	localStorage.location = response.address.city +", "+response.address.state +", "+response.address.country  } )
+
   get_tide_data()
   draw()
 }
@@ -156,6 +157,7 @@ function draw() {
   document.getElementById("demo").innerHTML = datetime + " ["+ localStorage.lat + ", " + localStorage.lon + "] "
   document.getElementById("geolocation").innerHTML = localStorage.location
   document.getElementById("tidedata").innerHTML = ""
+
   if (localStorage.tidedata == undefined) {
     get_tide_data()
   }
@@ -177,7 +179,7 @@ function get_tide_data() {
   lon = localStorage.lon
 
   settings = {
-    "async": true,
+    "async": false,
     "crossDomain": true,
     "url": "https://tides.p.rapidapi.com/tides?latitude="+lat+"&longitude="+lon+"&duration=4320&interval=60",
     "method": "GET",
