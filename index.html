@@ -185,7 +185,7 @@ function draw() {
   var d = new Date(JSON.parse(localStorage.d))
   var datetime = d.getDate()+"/"+checkTime((d.getMonth()+1))+"/"+d.getFullYear()+" "+d.getHours()+":"+checkTime(d.getMinutes())+":"+checkTime(d.getSeconds())
 
-  document.getElementById("demo").innerHTML = datetime 
+  // document.getElementById("demo").innerHTML = datetime 
   // document.getElementById("geolocation").innerHTML = localStorage.location
   document.getElementById("tidedata").innerHTML = ""
 
