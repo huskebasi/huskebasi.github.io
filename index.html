@@ -63,8 +63,8 @@ ul{
 }
 
 #mapid {
-  height: 90px;
-  width: 180px;
+  height: 120px;
+  width: 220px;
   margin: auto;
           }
 
@@ -185,9 +185,9 @@ function draw() {
   var d = new Date(JSON.parse(localStorage.d))
   var datetime = d.getDate()+"/"+checkTime((d.getMonth()+1))+"/"+d.getFullYear()+" "+d.getHours()+":"+checkTime(d.getMinutes())+":"+checkTime(d.getSeconds())
 
-  document.getElementById("demo").innerHTML = datetime + " ["+ localStorage.lat + ", " + localStorage.lon + "] "
-  document.getElementById("geolocation").innerHTML = localStorage.location
-  document.getElementById("tidedata").innerHTML = ""
+  document.getElementById("demo").innerHTML = datetime 
+  // document.getElementById("geolocation").innerHTML = localStorage.location
+  // document.getElementById("tidedata").innerHTML = ""
 
   if (localStorage.tidedata == undefined) {
     get_tide_data()
