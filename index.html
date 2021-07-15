@@ -122,7 +122,7 @@ function start() {
   startTime()
   if (localStorage.lat == undefined || localStorage.lon == undefined){
     console.log("localStorage.lat is undefined, updating...")
-    getLocation()
+    // getLocation()
   }
   draw()
 }
@@ -187,17 +187,21 @@ function draw() {
 
   document.getElementById("demo").innerHTML = datetime 
   // document.getElementById("geolocation").innerHTML = localStorage.location
-  // document.getElementById("tidedata").innerHTML = ""
+  document.getElementById("tidedata").innerHTML = ""
 
-  if (localStorage.tidedata == undefined) {
+  if (localStorage.dati == undefined) {
     get_tide_data()
   }
 
   var list = document.createElement("ul");
-  for (let i of JSON.parse(localStorage.tidedata) ) {
-    let item = document.createElement("li");
-    item.innerHTML = i;
-    list.appendChild(item);
+  var today = new Date();
+  for (let x of JSON.parse(localStorage.dati) ) {
+    if ((x.timestamp*1000)-Date.parse(today) > 0) {
+      let item = document.createElement("li");
+      let y = new Date(x.timestamp*1000)
+      item.innerHTML = y.toLocaleString().slice(0,16) + " " + x.state.split(/\s+/)[0] + " " + x.height.toFixed(2) + "m"
+      list.appendChild(item);
+      }
   }
   document.getElementById("tidedata").appendChild(list);
   document.getElementById("loader").style.display = "none";
@@ -220,13 +224,11 @@ function get_tide_data() {
     }
   }
 
-  // data = $.ajax(settings).done(function (response) { response.extremes.map(x => [x.datetime.slice(11,16) + " " + x.state.split(/\s+/)[0] + " " + x.height.toFixed(2)] + " m") } )
 
-  if (data.length == undefined) {
-    data = ["SAMPLE DATA","02:25 LOW -0.09 m","08:19 HIGH 0.11 m","14:16 LOW -0.15 m"]
-  }
+  $.ajax(settings).done(function (response) {localStorage.dati =  JSON.stringify(response.extremes) } )
 
   localStorage.tidedata = JSON.stringify(data)
+
 }
 
 </script>
