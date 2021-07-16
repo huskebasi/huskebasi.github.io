@@ -72,16 +72,11 @@ button {
   display: inline-block;
   background-color: blue;
   border-radius: 10px;
-  /*border: 4px double #cccccc;*/
   color: #eeeeee;
   text-align: center;
   font-size: 28px;
   padding: 20px;
   width: 200px;
-  -webkit-transition: all 0.5s;
-  -moz-transition: all 0.5s;
-  -o-transition: all 0.5s;
-  transition: all 0.5s;
   cursor: pointer;
   margin: auto;
 }
@@ -96,6 +91,7 @@ button {
   margin: 2px;
   text-align: center;
   animation: spin 2s linear infinite;
+  display: block;
 }
 
 @keyframes spin {
@@ -109,10 +105,10 @@ button {
 <body onload="start()">
 <p class ="orologio" id="orologio"></p>
 <div id='mapid'></div>
-<div class ="container">
+<div><p id="loader"></p></div>
+<div class ="container" onclick="getLocation()">
   <p class="coord" id="geolocation"></p>
   <p class="coord" id="demo"></p>
-  <div><p id="loader"></p></div>
   <div id='tidedata'></div>
   <button class="button, minus" onclick="getLocation()">  </button>
 </div>
@@ -120,7 +116,8 @@ button {
 
 
 
-var mymap = L.map('mapid').setView([localStorage.lat, localStorage.lon], 7);
+var mymap = L.map('mapid', { zoomControl: false });
+mymap.setView([localStorage.lat, localStorage.lon], 7);
 var marker = L.marker([localStorage.lat, localStorage.lon]).addTo(mymap);
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiaHVza2ViYXNpMjExIiwiYSI6ImNrOTFmYXd3bjBhNXgzbGxoenp0ZGc2ZGsifQ.K5szK8P-GJtEbt8b58hs1Q', {
     attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
@@ -128,7 +125,6 @@ L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_toke
     id: 'mapbox/streets-v11',
     tileSize: 512,
     zoomOffset: -1,
-    accessToken: 'your.mapbox.access.token'
 }).addTo(mymap);
 
 
@@ -171,7 +167,7 @@ function startTime() {
 
 function getLocation() {
   console.log("calling getLocation")
-  document.getElementById("loader").style.display = "inline-block";
+  // document.getElementById("loader").style.display = "inline-block";
   document.getElementById("demo").style.display = "none";
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(update_position);
@@ -223,7 +219,7 @@ function draw() {
       }
   }
   document.getElementById("tidedata").appendChild(list);
-  document.getElementById("loader").style.display = "none";
+  // document.getElementById("loader").style.display = "none";
   document.getElementById("demo").style.display = "inline-block";
 }
 
@@ -242,7 +238,6 @@ function get_tide_data() {
       "x-rapidapi-host": "tides.p.rapidapi.com"
     }
   }
-
 
   $.ajax(settings).done(function (response) {localStorage.dati =  JSON.stringify(response.extremes) } )
 
