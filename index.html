@@ -244,7 +244,7 @@ function get_tide_data() {
   }
 
 
-  // $.ajax(settings).done(function (response) {localStorage.dati =  JSON.stringify(response.extremes) } )
+  $.ajax(settings).done(function (response) {localStorage.dati =  JSON.stringify(response.extremes) } )
 
   localStorage.tidedata = JSON.stringify(data)
 
