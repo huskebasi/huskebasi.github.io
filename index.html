@@ -68,6 +68,25 @@ ul{
   margin: auto;
           }
 
+button {
+  display: inline-block;
+  background-color: blue;
+  border-radius: 10px;
+  /*border: 4px double #cccccc;*/
+  color: #eeeeee;
+  text-align: center;
+  font-size: 28px;
+  padding: 20px;
+  width: 200px;
+  -webkit-transition: all 0.5s;
+  -moz-transition: all 0.5s;
+  -o-transition: all 0.5s;
+  transition: all 0.5s;
+  cursor: pointer;
+  margin: auto;
+}
+
+}
 #loader {
   border: 14px solid #f3f3f3; /* Light grey */
   border-top: 14px solid #3498db; /* Blue */
@@ -88,15 +107,15 @@ ul{
 <body>
 
 <body onload="start()">
-<p class ="orologio" id="orologio" onclick="getLocation()"></p>
+<p class ="orologio" id="orologio"></p>
 <div id='mapid'></div>
-<div class ="container" onclick="getLocation()">
+<div class ="container">
   <p class="coord" id="geolocation"></p>
   <p class="coord" id="demo"></p>
   <div><p id="loader"></p></div>
   <div id='tidedata'></div>
+  <button class="button, minus" onclick="getLocation()">  </button>
 </div>
-<!-- <button class="button, minus" onclick="getLocation()"> - </button> -->
 <script>
 
 
@@ -169,7 +188,7 @@ function update_position(position){
   localStorage.lon = position.coords.longitude.toFixed(4)
 
   settings = {
-    "async": true,
+    "async": false,
     "crossDomain": true,
     "url": "https://eu1.locationiq.com/v1/reverse.php?key=pk.d98f446ddb42dffdd524224ce437b547&lat="+position.coords.latitude+"&lon="+position.coords.longitude+"&format=json",
     "method": "GET",
@@ -225,7 +244,7 @@ function get_tide_data() {
   }
 
 
-  $.ajax(settings).done(function (response) {localStorage.dati =  JSON.stringify(response.extremes) } )
+  // $.ajax(settings).done(function (response) {localStorage.dati =  JSON.stringify(response.extremes) } )
 
   localStorage.tidedata = JSON.stringify(data)
 
