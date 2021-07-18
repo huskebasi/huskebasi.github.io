@@ -31,7 +31,7 @@ body {background-color: black;}
 
 .container{
   text-align: center;
-  /*color: red;*/
+  color: white;
 }
 
 .orologio{
@@ -50,7 +50,7 @@ body {background-color: black;}
   font-size: 30px;
   padding: 5px;
   margin: 0;
-  /*color: white;*/
+  color: white;
   /*text-align: center;*/
 }
 
@@ -104,14 +104,15 @@ button {
 
 <body onload="start()">
 <p class ="orologio" id="orologio"></p>
-<div id='mapid'></div>
-<div><p id="loader"></p></div>
-<div class ="container" onclick="getLocation()">
+<div class ="container">
   <p class="coord" id="geolocation"></p>
+  <div id='mapid'></div>
   <p class="coord" id="demo"></p>
   <div id='tidedata'></div>
   <button class="button, minus" onclick="getLocation()">  </button>
 </div>
+  <p>https://www.run4gear.com/live/?channel=hJ0erNhGdW9e0Nt_Znb4Ayou763eXc7cII4_T3veVfjX3XkEsh9Uig</p>
+<div><p id="loader"></p></div>
 <script>
 
 
@@ -152,15 +153,6 @@ function startTime() {
     m = checkTime(m);
     s = checkTime(s);
     document.getElementById('orologio').innerHTML = h + ":" + m + ":" + s;
-    if ( Date.parse(today)-Date.parse(JSON.parse(localStorage.d)) > 1000 * 3600 * 24) {
-      document.getElementById('demo').style.color = "red";
-      document.getElementById('tidedata').style.color = "red";
-      document.getElementById('geolocation').style.color = "red";
-    } else {
-      document.getElementById('demo').style.color = "white";
-      document.getElementById('tidedata').style.color = "white";
-      document.getElementById('geolocation').style.color = "white";
-    }
     setTimeout(startTime, 500);
 }
 
