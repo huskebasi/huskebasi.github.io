@@ -69,11 +69,11 @@ ul{
           }
 
 button {
-  display: inline-block;
+  display: block;
   background-color: blue;
   border-radius: 10px;
   color: #eeeeee;
-  text-align: center;
+  /*text-align: center;*/
   font-size: 28px;
   padding: 20px;
   width: 200px;
@@ -81,14 +81,14 @@ button {
   margin: auto;
 }
 
-}
 #loader {
   border: 14px solid #f3f3f3; /* Light grey */
   border-top: 14px solid #3498db; /* Blue */
   border-radius: 50%;
-  width: 5px;
-  height: 5px;
-  margin: 2px;
+  width: 10px;
+  height:10px;
+  margin: auto;
+  margin-bottom: 5px;
   text-align: center;
   animation: spin 2s linear infinite;
   display: block;
@@ -105,13 +105,13 @@ button {
 <body onload="start()">
 <p class ="orologio" id="orologio"></p>
 <div class ="container">
-  <p class="coord" id="geolocation"></p>
-  <p class="coord" id="demo"></p>
   <div id='mapid'></div>
   <div id='tidedata'></div>
+  <div><p id="loader"></p> </div>
   <button class="button, minus" onclick="getLocation()">  </button>
+  <p class="coord" id="geolocation"></p>
+  <p class="coord" id="demo"></p>
 </div>
-<div><p id="loader"></p></div>
 <script>
 
 
@@ -158,7 +158,7 @@ function startTime() {
 
 function getLocation() {
   console.log("calling getLocation")
-  // document.getElementById("loader").style.display = "inline-block";
+  document.getElementById("loader").style.display = "inline-block";
   document.getElementById("demo").style.display = "none";
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(update_position);
@@ -210,7 +210,7 @@ function draw() {
       }
   }
   document.getElementById("tidedata").appendChild(list);
-  // document.getElementById("loader").style.display = "none";
+  document.getElementById("loader").style.display = "none";
   document.getElementById("demo").style.display = "inline-block";
 }
 
