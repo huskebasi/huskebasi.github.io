@@ -63,7 +63,7 @@ ul{
 }
 
 #mapid {
-  height: 120px;
+  height: 80px;
   width: 220px;
   margin: auto;
           }
@@ -116,7 +116,7 @@ button {
 
 
 
-var mymap = L.map('mapid', { zoomControl: false });
+var mymap = L.map('mapid', { zoomControl: false,  attributionControl:false  });
 mymap.setView([localStorage.lat, localStorage.lon], 7);
 var marker = L.marker([localStorage.lat, localStorage.lon]).addTo(mymap);
 L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiaHVza2ViYXNpMjExIiwiYSI6ImNrOTFmYXd3bjBhNXgzbGxoenp0ZGc2ZGsifQ.K5szK8P-GJtEbt8b58hs1Q', {
