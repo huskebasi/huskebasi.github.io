@@ -41,7 +41,7 @@ body {background-color: black;}
   margin-top: 10px;
   /*text-align: center;*/
   margin-left: 100px !important;
-  color: blue;
+  color: lightblue;
   font-weight: bold;
 }
 
@@ -105,17 +105,17 @@ button {
 <body onload="start()">
 <p class ="orologio" id="orologio"></p>
 <div class ="container">
+  
   <div id='mapid'></div>
   <div id='tidedata'></div>
   <div><p id="loader"></p> </div>
   <button class="button, minus" onclick="getLocation()">  </button>
+
   <p class="coord" id="geolocation"></p>
   <p class="coord" id="demo"></p>
 </div>
+
 <script>
-
-
-
 var mymap = L.map('mapid', { zoomControl: false,  attributionControl:false  });
 mymap.setView([localStorage.lat, localStorage.lon], 7);
 var marker = L.marker([localStorage.lat, localStorage.lon]).addTo(mymap);
