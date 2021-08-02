@@ -34,15 +34,16 @@ body {background-color: black;}
   color: white;
 }
 
-.orologio{
+#orologio{
   /*display: inline-block;*/
   font-size: 40px;
   padding: 10px;
-  margin-top: 10px;
+  /*margin-top: 10px;*/
   /*text-align: center;*/
-  margin-left: 100px !important;
+  /*margin-left: 100px !important;*/
   color: lightblue;
   font-weight: bold;
+  /*margin: auto;*/
 }
 
 .coord{
@@ -103,14 +104,12 @@ button {
 <body>
 
 <body onload="start()">
-<p class ="orologio" id="orologio"></p>
 <div class ="container">
-  
+  <p id ="orologio"></p>  
   <div id='mapid'></div>
   <div id='tidedata'></div>
   <div><p id="loader"></p> </div>
   <button class="button, minus" onclick="getLocation()">  </button>
-
 </div>
 
 <script>
