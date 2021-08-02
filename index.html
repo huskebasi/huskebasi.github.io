@@ -111,21 +111,10 @@ button {
   <div><p id="loader"></p> </div>
   <button class="button, minus" onclick="getLocation()">  </button>
 
-  <p class="coord" id="geolocation"></p>
-  <p class="coord" id="demo"></p>
 </div>
 
 <script>
-var mymap = L.map('mapid', { zoomControl: false,  attributionControl:false  });
-mymap.setView([localStorage.lat, localStorage.lon], 7);
-var marker = L.marker([localStorage.lat, localStorage.lon]).addTo(mymap);
-L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiaHVza2ViYXNpMjExIiwiYSI6ImNrOTFmYXd3bjBhNXgzbGxoenp0ZGc2ZGsifQ.K5szK8P-GJtEbt8b58hs1Q', {
-    attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-    maxZoom: 18,
-    id: 'mapbox/streets-v11',
-    tileSize: 512,
-    zoomOffset: -1,
-}).addTo(mymap);
+
 
 
 function checkTime(i) {
@@ -135,10 +124,6 @@ function checkTime(i) {
 
 function start() {
   startTime()
-  if (localStorage.lat == undefined || localStorage.lon == undefined){
-    console.log("localStorage.lat is undefined, updating...")
-    // getLocation()
-  }
   draw()
 }
 
@@ -159,59 +144,61 @@ function startTime() {
 function getLocation() {
   console.log("calling getLocation")
   document.getElementById("loader").style.display = "inline-block";
-  document.getElementById("demo").style.display = "none";
-  if (navigator.geolocation) {
-    navigator.geolocation.getCurrentPosition(update_position);
-  } else { 
-    document.getElementById("demo").innerHTML = "Geolocation is not supported by this browser.";
-  }
-}
 
-function update_position(position){
-  console.log("calling update_position")
-  d = new Date()
-  localStorage.d = JSON.stringify(d)
-  localStorage.lat = position.coords.latitude.toFixed(4)
-  localStorage.lon = position.coords.longitude.toFixed(4)
-
-  settings = {
-    "async": false,
-    "crossDomain": true,
-    "url": "https://eu1.locationiq.com/v1/reverse.php?key=pk.d98f446ddb42dffdd524224ce437b547&lat="+position.coords.latitude+"&lon="+position.coords.longitude+"&format=json",
-    "method": "GET",
-  }
-  data = $.ajax(settings).done(function (response) {   
-  	localStorage.location = response.address.city +", "+response.address.state +", "+response.address.country  } )
+  console.log("calling update_position")  
+  navigator.geolocation.getCurrentPosition(update_position);
 
   get_tide_data()
+
   draw()
 }
 
-function draw() {
-  var d = new Date(JSON.parse(localStorage.d))
-  var datetime = d.getDate()+"/"+checkTime((d.getMonth()+1))+"/"+d.getFullYear()+" "+d.getHours()+":"+checkTime(d.getMinutes())+":"+checkTime(d.getSeconds())
+function update_position(position){
+  localStorage.lat = position.coords.latitude.toFixed(4)
+  localStorage.lon = position.coords.longitude.toFixed(4)
+}
 
-  // document.getElementById("demo").innerHTML = datetime 
-  // document.getElementById("geolocation").innerHTML = localStorage.location
+
+function draw() {
+
+  var mymap = L.map('mapid', { zoomControl: false,  attributionControl:false  });
+  mymap.setView([localStorage.lat, localStorage.lon], 7);
+  var marker = L.marker([localStorage.lat, localStorage.lon]).addTo(mymap);
+  L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiaHVza2ViYXNpMjExIiwiYSI6ImNrOTFmYXd3bjBhNXgzbGxoenp0ZGc2ZGsifQ.K5szK8P-GJtEbt8b58hs1Q', {
+      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
+      maxZoom: 18,
+      id: 'mapbox/streets-v11',
+      tileSize: 512,
+      zoomOffset: -1,
+  }).addTo(mymap);
+
+
   document.getElementById("tidedata").innerHTML = ""
 
-  if (localStorage.dati == undefined) {
-    get_tide_data()
-  }
 
   var list = document.createElement("ul");
   var today = new Date();
+  var lines_counter = 0;
   for (let x of JSON.parse(localStorage.dati) ) {
     if ((x.timestamp*1000)-Date.parse(today) > 0) {
       let item = document.createElement("li");
       let y = new Date(x.timestamp*1000)
       item.innerHTML = y.toLocaleString().slice(0,16) + " " + x.state.split(/\s+/)[0] + " " + x.height.toFixed(2) + "m"
       list.appendChild(item);
-      }
+      lines_counter++
+    }
   }
+  
+  if (lines_counter == 0) {
+    console.log("lines_counter == 0, calling again getLocation")
+    getLocation();
+  } else {
+    console.log("lines_counter = " + lines_counter)
+  }
+
+
   document.getElementById("tidedata").appendChild(list);
   document.getElementById("loader").style.display = "none";
-  document.getElementById("demo").style.display = "inline-block";
 }
 
 function get_tide_data() {
@@ -232,7 +219,6 @@ function get_tide_data() {
 
   $.ajax(settings).done(function (response) {localStorage.dati =  JSON.stringify(response.extremes) } )
 
-  localStorage.tidedata = JSON.stringify(data)
 
 }
 
