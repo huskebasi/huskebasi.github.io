@@ -46,15 +46,6 @@ body {background-color: black;}
   /*margin: auto;*/
 }
 
-.coord{
-  /*display: inline-block;*/
-  font-size: 30px;
-  padding: 5px;
-  margin: 0;
-  color: white;
-  /*text-align: center;*/
-}
-
 ul{
   list-style-type: none;
   /*color: white;*/
@@ -208,7 +199,7 @@ function get_tide_data() {
   settings = {
     "async": false,
     "crossDomain": true,
-    "url": "https://tides.p.rapidapi.com/tides?latitude="+lat+"&longitude="+lon+"&duration=4320&interval=60",
+    "url": "https://tides.p.rapidapi.com/tides?latitude="+lat+"&longitude="+lon+"&duration=10080&interval=60",
     "method": "GET",
     "headers": {
       "x-rapidapi-key": "fbf93a6482mshd1b9ac4b389f5d3p195c26jsn2d4bc217232b",
