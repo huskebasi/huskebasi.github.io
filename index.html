@@ -56,7 +56,7 @@ ul{
 
 #mapid {
   height:100px;
-  width: 250px;
+  width: 280px;
   margin: auto;
           }
 
@@ -155,7 +155,7 @@ function draw() {
   document.getElementById("coordinates").innerHTML = localStorage.lat + "°, " + localStorage.lon + "°"
 
   var mymap = L.map('mapid', { zoomControl: false,  attributionControl:false  });
-  mymap.setView([localStorage.lat, localStorage.lon], 7);
+  mymap.setView([parseFloat(localStorage.lat)+0.2, localStorage.lon], 7);
   var marker = L.marker([localStorage.lat, localStorage.lon]).addTo(mymap);
   L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiaHVza2ViYXNpMjExIiwiYSI6ImNrOTFmYXd3bjBhNXgzbGxoenp0ZGc2ZGsifQ.K5szK8P-GJtEbt8b58hs1Q', {
       attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
