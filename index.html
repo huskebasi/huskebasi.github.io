@@ -148,11 +148,11 @@ function getLocation() {
 function update_position(position){
   localStorage.lat = position.coords.latitude.toFixed(4)
   localStorage.lon = position.coords.longitude.toFixed(4)
-  document.getElementById("coordinates").innerHTML = localStorage.lat + "°, " + localStorage.lon + "°"
 }
 
 
 function draw() {
+  document.getElementById("coordinates").innerHTML = localStorage.lat + "°, " + localStorage.lon + "°"
 
   var mymap = L.map('mapid', { zoomControl: false,  attributionControl:false  });
   mymap.setView([localStorage.lat, localStorage.lon], 7);
