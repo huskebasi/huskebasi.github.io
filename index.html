@@ -101,6 +101,7 @@ button {
   <div id='tidedata'></div>
   <div><p id="loader"></p> </div>
   <button class="button, minus" onclick="getLocation()">  </button>
+  <div><p id="coordinates"></p> </div>
 </div>
 
 <script>
@@ -146,6 +147,7 @@ function getLocation() {
 function update_position(position){
   localStorage.lat = position.coords.latitude.toFixed(4)
   localStorage.lon = position.coords.longitude.toFixed(4)
+  document.getElementById("coordinates").innerHTML = localStorage.lat + "," + localStorage.lon
 }
 
 
@@ -181,7 +183,6 @@ function draw() {
   
   if (lines_counter == 0) {
     console.log("lines_counter == 0, calling again getLocation")
-    getLocation();
   } else {
     console.log("lines_counter = " + lines_counter)
   }
