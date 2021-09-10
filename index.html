@@ -96,11 +96,12 @@ button {
 
 <body onload="start()">
 <div class ="container">
+  <p id ="demo"></p>  
   <p id ="orologio"></p>  
   <div id='mapid'></div>
   <div id='tidedata'></div>
   <div><p id="loader"></p> </div>
-  <button class="button, minus" onclick="getLocation()">  </button>
+  <button class="button, minus" onclick="position_then_tides()">  </button>
   <div><p id="coordinates"></p> </div>
 </div>
 
@@ -114,7 +115,6 @@ function checkTime(i) {
 }
 
 function start() {
-  document.getElementById("loader").style.display = "none"
   startTime()
   draw()
 }
@@ -133,28 +133,74 @@ function startTime() {
 }
 
 
-function getLocation() {
-  console.log("calling getLocation")
+async function position_then_tides() {
   document.getElementById("loader").style.display = "inline-block";
 
-  console.log("calling update_position")  
-  navigator.geolocation.getCurrentPosition(update_position);
+  var promise1 = new Promise(function(resolve, reject) {
+      navigator.geolocation.getCurrentPosition(async function(pos){
+          localStorage.lat = pos.coords.latitude
+          localStorage.lon = pos.coords.longitude
 
-  get_tide_data()
+          // localStorage.lat = Math.random()*90
+          // localStorage.lon = Math.random()*90
+          // await new Promise(r => setTimeout(r, 2000));
+          console.log("update_position finished")
+          resolve(pos);
+      }) 
+  })
 
-  draw()
+  promise1.then( async function() {
+    await get_tide_data()
+  }).then( function() {
+    draw()
+  })
+
 }
+
+
 
 function update_position(position){
   localStorage.lat = position.coords.latitude.toFixed(4)
   localStorage.lon = position.coords.longitude.toFixed(4)
+  localStorage.timestamp = position.timestamp
+  return "update_position finished"
+}
+
+
+async function get_tide_data() {
+  // console.log("calling get_tide_data")
+  lat = localStorage.lat
+  lon = localStorage.lon
+
+  settings = {
+    "crossDomain": true,
+    "url": "https://tides.p.rapidapi.com/tides?latitude="+lat+"&longitude="+lon+"&duration=10080&interval=60",
+    "method": "GET",
+    "headers": {
+      "x-rapidapi-key": "fbf93a6482mshd1b9ac4b389f5d3p195c26jsn2d4bc217232b",
+      "x-rapidapi-host": "tides.p.rapidapi.com"
+    }
+  }
+
+  $.ajax(settings).done(function (response) {localStorage.dati =  JSON.stringify(response.extremes) } )
+  // await new Promise(r => setTimeout(r, 2000));
+  console.log("get_tide_data finished")
+
+
 }
 
 
 function draw() {
+  console.log("calling draw")
   document.getElementById("coordinates").innerHTML = localStorage.lat + "°, " + localStorage.lon + "°"
 
+  var container = L.DomUtil.get('mapid');
+      if(container != null){
+        container._leaflet_id = null;
+      }
+
   var mymap = L.map('mapid', { zoomControl: false,  attributionControl:false  });
+  
   mymap.setView([parseFloat(localStorage.lat)+0.2, localStorage.lon], 7);
   var marker = L.marker([localStorage.lat, localStorage.lon]).addTo(mymap);
   L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiaHVza2ViYXNpMjExIiwiYSI6ImNrOTFmYXd3bjBhNXgzbGxoenp0ZGc2ZGsifQ.K5szK8P-GJtEbt8b58hs1Q', {
@@ -171,49 +217,26 @@ function draw() {
 
   var list = document.createElement("ul");
   var today = new Date();
-  var lines_counter = 0;
   for (let x of JSON.parse(localStorage.dati) ) {
     // debugger
-    if ((x.timestamp*1000) + 10800-Date.parse(today) > 0) {
+    if ((x.timestamp*1000) + 10800000 -Date.parse(today) > 0) {
       let item = document.createElement("li");
       let y = new Date(x.timestamp*1000)
       item.innerHTML = y.toLocaleString().slice(0,16) + " " + x.state.split(/\s+/)[0] + " " + x.height.toFixed(2) + "m"
       list.appendChild(item);
-      lines_counter++
     }
   }
   
-  if (lines_counter == 0) {
-    console.log("lines_counter == 0")
-  } else {
-    console.log("lines_counter = " + lines_counter)
-  }
 
 
   document.getElementById("tidedata").appendChild(list);
   document.getElementById("loader").style.display = "none";
+  console.log("draw finished")
 }
 
-function get_tide_data() {
-  console.log("calling get_tide_data")
-  lat = localStorage.lat
-  lon = localStorage.lon
-
-  settings = {
-    "async": false,
-    "crossDomain": true,
-    "url": "https://tides.p.rapidapi.com/tides?latitude="+lat+"&longitude="+lon+"&duration=10080&interval=60",
-    "method": "GET",
-    "headers": {
-      "x-rapidapi-key": "fbf93a6482mshd1b9ac4b389f5d3p195c26jsn2d4bc217232b",
-      "x-rapidapi-host": "tides.p.rapidapi.com"
-    }
-  }
-
-  $.ajax(settings).done(function (response) {localStorage.dati =  JSON.stringify(response.extremes) } )
 
 
-}
+
 
 </script>
 
