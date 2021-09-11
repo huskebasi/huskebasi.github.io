@@ -96,7 +96,6 @@ button {
 
 <body onload="start()">
 <div class ="container">
-  <p id ="demo"></p>  
   <p id ="orologio"></p>  
   <div id='mapid'></div>
   <div id='tidedata'></div>
@@ -138,8 +137,8 @@ async function position_then_tides() {
 
   var promise1 = new Promise(function(resolve, reject) {
       navigator.geolocation.getCurrentPosition(async function(pos){
-          localStorage.lat = pos.coords.latitude
-          localStorage.lon = pos.coords.longitude
+          localStorage.lat = pos.coords.latitude.toFixed(4)
+          localStorage.lon = pos.coords.longitude.toFixed(4)
 
           // localStorage.lat = Math.random()*90
           // localStorage.lon = Math.random()*90
@@ -218,8 +217,8 @@ function draw() {
   var list = document.createElement("ul");
   var today = new Date();
   for (let x of JSON.parse(localStorage.dati) ) {
-    // debugger
-    if ((x.timestamp*1000) - 10800000 -Date.parse(today) > 0) {
+    debugger
+    if ((x.timestamp*1000) + 21600000 -Date.parse(today) > 0) {
       let item = document.createElement("li");
       let y = new Date(x.timestamp*1000)
       item.innerHTML = y.toLocaleString().slice(0,16) + " " + x.state.split(/\s+/)[0] + " " + x.height.toFixed(2) + "m"
