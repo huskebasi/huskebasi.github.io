@@ -219,7 +219,7 @@ function draw() {
   var today = new Date();
   for (let x of JSON.parse(localStorage.dati) ) {
     // debugger
-    if ((x.timestamp*1000) + 10800000 -Date.parse(today) > 0) {
+    if ((x.timestamp*1000) - 10800000 -Date.parse(today) > 0) {
       let item = document.createElement("li");
       let y = new Date(x.timestamp*1000)
       item.innerHTML = y.toLocaleString().slice(0,16) + " " + x.state.split(/\s+/)[0] + " " + x.height.toFixed(2) + "m"
