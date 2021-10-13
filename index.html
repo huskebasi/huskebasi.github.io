@@ -145,7 +145,7 @@ async function position_then_tides() {
           // await new Promise(r => setTimeout(r, 2000));
           console.log("update_position finished")
           resolve(pos);
-      }) 
+      })
   })
 
   promise1.then( async function() {
@@ -221,7 +221,7 @@ function draw() {
     if ((x.timestamp*1000) + 21600000 -Date.parse(today) > 0) {
       let item = document.createElement("li");
       let y = new Date(x.timestamp*1000)
-      item.innerHTML = y.toLocaleString().slice(0,16) + " " + x.state.split(/\s+/)[0] + " " + x.height.toFixed(2) + "m"
+      item.innerHTML = y.toLocaleString().slice(0,17) + " " + x.state.split(/\s+/)[0] + " " + x.height.toFixed(2) + "m"
       list.appendChild(item);
     }
   }
