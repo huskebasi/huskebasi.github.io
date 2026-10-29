@@ -35,7 +35,9 @@ Nel repo GitHub:
 
 1. **Settings → Secrets and variables → Actions → New repository secret**
 2. Nome: `RAPIDAPI_KEY`
-3. Valore: la chiave RapidAPI (quella nuova, non quella vecchia pubblica)
+3. Valore: la chiave RapidAPI
+
+> Il secret attuale è stato impostato con la vecchia chiave (quella che era nella pagina) per far funzionare subito il workflow. La pagina non la espone più, ma la chiave resta compromessa: appena puoi creane una nuova nel dashboard RapidAPI e sostituisci il secret con `gh secret set RAPIDAPI_KEY` (o dalla UI GitHub).
 
 Il workflow:
 
