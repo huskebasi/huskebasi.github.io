@@ -1,244 +1,435 @@
 <!DOCTYPE html>
-<html>
-
+<html lang="it">
 <head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Maree</title>
+
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
-   integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
-   crossorigin=""/>
- </head>
+        integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+        crossorigin=""/>
 
- <!-- Make sure you put this AFTER Leaflet's CSS -->
- <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
-   integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
-   crossorigin=""></script>
-<!-- 
-<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
-<script src="http://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></scrip -->
-<script language="JavaScript" type="text/javascript" src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-<script language="JavaScript" type="text/javascript" src="https://code.jquery.com/mobile/1.4.5/jquery.mobile-1.4.5.min.js"></script>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #000;
+      --fg: #fff;
+      --muted: #aaa;
+      --high: #ffd166;
+      --low: #7dd3fc;
+      --error: #ff6b6b;
+    }
 
-<style>
-p {
-  display: inline-block;
-  font-size: 140px;
-  padding: 20px;
-  margin: 0;
-  color: white;
-}
+    * { box-sizing: border-box; }
 
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--fg);
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    }
 
-body {background-color: black;}
+    .container {
+      width: min(100%, 1100px);
+      margin: 0 auto;
+      padding: 16px;
+      text-align: center;
+    }
 
-.container{
-  text-align: center;
-  color: white;
-}
+    #orologio {
+      font-size: clamp(56px, 14vw, 110px);
+      font-weight: 700;
+      color: lightblue;
+      margin: 0;
+      line-height: 1.05;
+    }
 
-#orologio{
-  /*display: inline-block;*/
-  font-size: 100px;
-  padding: 20px;
-  /*margin-top: 10px;*/
-  /*text-align: center;*/
-  /*margin-left: 100px !important;*/
-  color: lightblue;
-  font-weight: bold;
-  /*margin: auto;*/
-}
+    #status {
+      min-height: 1.4em;
+      margin: 4px 0 12px;
+      color: var(--muted);
+      font-size: clamp(14px, 2.5vw, 18px);
+    }
 
-ul{
-  list-style-type: none;
-  /*color: white;*/
-  font-size: 90px;
-  margin-top: 30;
-  padding: 0;
-}
+    #status.error { color: var(--error); }
 
-#mapid {
-  height:200px;
-  width: 600px;
-  margin: auto;
-          }
+    .spot-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+      justify-content: center;
+      margin: 8px 0 14px;
+      font-size: clamp(16px, 2.6vw, 22px);
+    }
 
-button {
-  display: block;
-  background-color: blue;
-  border-radius: 10px;
-  color: #eeeeee;
-  /*text-align: center;*/
-  font-size: 28px;
-  padding: 20px;
-  width: 500px;
-  height:150px;
-  cursor: pointer;
-  margin: auto;
-}
+    select, button {
+      font: inherit;
+      color: var(--fg);
+      background: #111;
+      border: 1px solid #444;
+      border-radius: 10px;
+      padding: 10px 14px;
+    }
 
-#loader {
-  border: 30px solid #f3f3f3; /* Light grey */
-  border-top: 30px solid #3498db; /* Blue */
-  border-radius: 50%;
-  width: 30px;
-  height:30px;
-  margin: auto;
-  margin-bottom: 14px;
-  text-align: center;
-  animation: spin 2s linear infinite;
-  display: block;
-}
+    button {
+      background: #1d4ed8;
+      border-color: #1d4ed8;
+      cursor: pointer;
+    }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+    button:active { transform: translateY(1px); }
 
-</style>
-<body>
+    #mapid {
+      width: 100%;
+      height: min(42vh, 320px);
+      margin: 0 auto 18px;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    #tidedata ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 18px;
+    }
+
+    #tidedata li {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4em 1.2em;
+      align-items: baseline;
+      justify-content: center;
+      padding: 10px 6px;
+      border-bottom: 1px solid #222;
+      font-size: clamp(22px, 5vw, 46px);
+    }
+
+    #tidedata .when { color: #ddd; }
+    #tidedata .state { font-weight: 700; }
+    #tidedata .state.high { color: var(--high); }
+    #tidedata .state.low { color: var(--low); }
+    #tidedata .height { color: var(--muted); font-variant-numeric: tabular-nums; }
+
+    #loader {
+      display: none;
+      width: 34px;
+      height: 34px;
+      margin: 8px auto 18px;
+      border: 4px solid #333;
+      border-top-color: #3498db;
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+    }
+
+    @keyframes spin {
+      to { transform: rotate(360deg); }
+    }
+
+    #coordinates, #updated, #attribution {
+      color: var(--muted);
+      font-size: clamp(13px, 2.2vw, 16px);
+      margin: 6px 0;
+    }
+
+    #attribution { font-size: clamp(11px, 1.8vw, 13px); }
+
+    @media (max-width: 560px) {
+      #tidedata li { flex-direction: column; gap: 2px; }
+    }
+  </style>
+</head>
 
 <body onload="start()">
-<div class ="container">
-  <p id ="orologio"></p>  
-  <div id='mapid'></div>
-  <div id='tidedata'></div>
-  <div><p id="loader"></p> </div>
-  <button class="button, minus" onclick="position_then_tides()">  </button>
-  <div><p id="coordinates"></p> </div>
-</div>
+  <div class="container">
+    <p id="orologio"></p>
+    <div id="status"></div>
 
-<script>
+    <div class="spot-row">
+      <label for="spot-select">Località</label>
+      <select id="spot-select" onchange="onSpotChange()"></select>
+      <button type="button" onclick="position_then_tides()">Usa la mia posizione</button>
+    </div>
 
+    <div id="mapid"></div>
 
+    <div id="tidedata"></div>
+    <div id="loader"></div>
 
-function checkTime(i) {
-    if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
-    return i;
-}
+    <div id="coordinates"></div>
+    <div id="updated"></div>
+    <div id="attribution"></div>
+  </div>
 
-function start() {
-  startTime()
-  draw()
-}
+  <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+          integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+          crossorigin=""></script>
 
-function startTime() {
-  var weekday=["Domenica","Lunedì","Martedì","Mercoledì","Giovedì","Venerdì","Sabato"]
-    var today = new Date();
-    var h = today.getHours();
-    var m = today.getMinutes();
-    var s = today.getSeconds();
-    var d = weekday[today.getDay()];
-    m = checkTime(m);
-    s = checkTime(s);
-    document.getElementById('orologio').innerHTML = h + ":" + m + ":" + s;
-    setTimeout(startTime, 500);
-}
+  <script>
+    const state = {
+      tides: null,
+      selectedSpot: null,
+      userPosition: null
+    };
 
+    let map = null;
+    let spotMarker = null;
+    let userMarker = null;
 
-async function position_then_tides() {
-  document.getElementById("loader").style.display = "inline-block";
-
-  var promise1 = new Promise(function(resolve, reject) {
-      navigator.geolocation.getCurrentPosition(async function(pos){
-          localStorage.lat = pos.coords.latitude.toFixed(4)
-          localStorage.lon = pos.coords.longitude.toFixed(4)
-
-          // localStorage.lat = Math.random()*90
-          // localStorage.lon = Math.random()*90
-          // await new Promise(r => setTimeout(r, 2000));
-          console.log("update_position finished")
-          resolve(pos);
-      })
-  })
-
-  promise1.then( async function() {
-    await get_tide_data()
-  }).then( function() {
-    draw()
-  })
-
-}
-
-
-
-function update_position(position){
-  localStorage.lat = position.coords.latitude.toFixed(4)
-  localStorage.lon = position.coords.longitude.toFixed(4)
-  localStorage.timestamp = position.timestamp
-  return "update_position finished"
-}
-
-
-async function get_tide_data() {
-  // console.log("calling get_tide_data")
-  lat = localStorage.lat
-  lon = localStorage.lon
-
-  settings = {
-    "crossDomain": true,
-    "url": "https://tides.p.rapidapi.com/tides?latitude="+lat+"&longitude="+lon+"&duration=10080&interval=60",
-    "method": "GET",
-    "headers": {
-      "x-rapidapi-key": "fbf93a6482mshd1b9ac4b389f5d3p195c26jsn2d4bc217232b",
-      "x-rapidapi-host": "tides.p.rapidapi.com"
+    function start() {
+      startTime();
+      loadTides();
     }
-  }
 
-  $.ajax(settings).done(function (response) {localStorage.dati =  JSON.stringify(response.extremes) } )
-  // await new Promise(r => setTimeout(r, 2000));
-  console.log("get_tide_data finished")
+    function checkTime(i) {
+      return i < 10 ? "0" + i : i;
+    }
 
+    function startTime() {
+      const now = new Date();
+      document.getElementById("orologio").textContent =
+        checkTime(now.getHours()) + ":" + checkTime(now.getMinutes()) + ":" + checkTime(now.getSeconds());
+      setTimeout(startTime, 500);
+    }
 
-}
+    async function loadTides() {
+      setLoader(true);
+      setStatus("");
+      try {
+        const response = await fetch("tides.json?ts=" + Date.now(), { cache: "no-store" });
+        if (!response.ok) throw new Error("HTTP " + response.status);
 
+        const data = await response.json();
+        if (!data.spots || !data.spots.length) throw new Error("nessuna località configurata");
 
-function draw() {
-  console.log("calling draw")
-  document.getElementById("coordinates").innerHTML = localStorage.lat + "°, " + localStorage.lon + "°"
+        state.tides = data;
+        state.selectedSpot = data.spots[0];
+        populateSpotSelect();
+        render();
 
-  var container = L.DomUtil.get('mapid');
-      if(container != null){
-        container._leaflet_id = null;
+        const ageDays = (Date.now() / 1000 - data.generatedAt) / 86400;
+        if (ageDays > 4) {
+          setStatus("Dati aggiornati " + ageDays.toFixed(1) + " giorni fa: il workflow potrebbe non essere partito.");
+        }
+
+        // Prova a selezionare lo spot più vicino, senza bloccare il rendering.
+        try {
+          const position = await getCurrentPosition();
+          state.userPosition = {
+            lat: position.coords.latitude,
+            lon: position.coords.longitude
+          };
+          const nearest = nearestSpot(state.userPosition.lat, state.userPosition.lon);
+          if (nearest) {
+            state.selectedSpot = nearest;
+            populateSpotSelect();
+            render();
+          }
+          document.getElementById("coordinates").textContent =
+            "Posizione: " + state.userPosition.lat.toFixed(4) + "°, " +
+            state.userPosition.lon.toFixed(4) + "°";
+        } catch (error) {
+          document.getElementById("coordinates").textContent =
+            "Posizione non disponibile: " + error.message;
+        }
+      } catch (error) {
+        setStatus("Dati maree non disponibili: " + error.message, true);
+      } finally {
+        setLoader(false);
+      }
+    }
+
+    function populateSpotSelect() {
+      const select = document.getElementById("spot-select");
+      select.innerHTML = "";
+      if (!state.tides) return;
+
+      for (const spot of state.tides.spots) {
+        const option = document.createElement("option");
+        option.value = spot.name;
+        option.textContent = spot.name;
+        option.selected = state.selectedSpot && spot.name === state.selectedSpot.name;
+        select.appendChild(option);
+      }
+    }
+
+    function onSpotChange() {
+      if (!state.tides) return;
+      const name = document.getElementById("spot-select").value;
+      state.selectedSpot = state.tides.spots.find(spot => spot.name === name) || state.tides.spots[0];
+      render();
+    }
+
+    function render() {
+      if (!state.selectedSpot) return;
+      if (typeof L !== "undefined") {
+        drawMap(state.selectedSpot);
+      } else {
+        document.getElementById("mapid").textContent = "Mappa non disponibile";
+      }
+      drawTides(state.selectedSpot);
+      drawMeta(state.selectedSpot);
+    }
+
+    function drawMap(spot) {
+      if (!map) {
+        map = L.map("mapid", { zoomControl: false, attributionControl: false });
+        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+          maxZoom: 19,
+          attribution: "&copy; OpenStreetMap"
+        }).addTo(map);
       }
 
-  var mymap = L.map('mapid', { zoomControl: false,  attributionControl:false  });
-  
-  mymap.setView([parseFloat(localStorage.lat)+0.2, localStorage.lon], 7);
-  var marker = L.marker([localStorage.lat, localStorage.lon]).addTo(mymap);
-  L.tileLayer('https://api.mapbox.com/styles/v1/{id}/tiles/{z}/{x}/{y}?access_token=pk.eyJ1IjoiaHVza2ViYXNpMjExIiwiYSI6ImNrOTFmYXd3bjBhNXgzbGxoenp0ZGc2ZGsifQ.K5szK8P-GJtEbt8b58hs1Q', {
-      attribution: 'Map data &copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, Imagery © <a href="https://www.mapbox.com/">Mapbox</a>',
-      maxZoom: 18,
-      id: 'mapbox/streets-v11',
-      tileSize: 512,
-      zoomOffset: -1,
-  }).addTo(mymap);
+      map.setView([spot.latitude, spot.longitude], 11);
 
+      if (spotMarker) {
+        spotMarker.setLatLng([spot.latitude, spot.longitude]).bindPopup(spot.name);
+      } else {
+        spotMarker = L.marker([spot.latitude, spot.longitude]).addTo(map).bindPopup(spot.name);
+      }
 
-  document.getElementById("tidedata").innerHTML = ""
+      if (state.userPosition) {
+        const latLng = [state.userPosition.lat, state.userPosition.lon];
+        if (userMarker) {
+          userMarker.setLatLng(latLng);
+        } else {
+          userMarker = L.circleMarker(latLng, { radius: 6 }).addTo(map).bindPopup("Tu");
+        }
+      }
 
-
-  var list = document.createElement("ul");
-  var today = new Date();
-  for (let x of JSON.parse(localStorage.dati) ) {
-    debugger
-    if ((x.timestamp*1000) + 21600000 -Date.parse(today) > 0) {
-      let item = document.createElement("li");
-      let y = new Date(x.timestamp*1000)
-      item.innerHTML = y.toLocaleString().slice(0,17) + " " + x.state.split(/\s+/)[0] + " " + x.height.toFixed(2) + "m"
-      list.appendChild(item);
+      setTimeout(() => map.invalidateSize(), 0);
     }
-  }
-  
 
+    function drawTides(spot) {
+      const now = Date.now() / 1000;
+      const future = (spot.extremes || [])
+        .filter(event => event.timestamp > now)
+        .slice(0, 10);
 
-  document.getElementById("tidedata").appendChild(list);
-  document.getElementById("loader").style.display = "none";
-  console.log("draw finished")
-}
+      const list = document.createElement("ul");
 
+      if (!future.length) {
+        const item = document.createElement("li");
+        item.textContent = "Nessun evento futuro. Aggiorna i dati.";
+        list.appendChild(item);
+      }
 
+      for (const event of future) {
+        const item = document.createElement("li");
+        const when = new Date(event.timestamp * 1000).toLocaleString("it-IT", {
+          weekday: "short",
+          day: "2-digit",
+          month: "short",
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+        const label = event.state === "HIGH" ? "Alta" : "Bassa";
+        item.innerHTML =
+          '<span class="when">' + when + "</span>" +
+          '<span class="state ' + event.state.toLowerCase() + '">' + label + "</span>" +
+          '<span class="height">' + formatHeight(event.height) + "</span>";
+        list.appendChild(item);
+      }
 
+      const container = document.getElementById("tidedata");
+      container.innerHTML = "";
+      container.appendChild(list);
+    }
 
+    function drawMeta(spot) {
+      const generated = state.tides && state.tides.generatedAt
+        ? new Date(state.tides.generatedAt * 1000)
+        : null;
+      const updated = document.getElementById("updated");
+      updated.innerHTML = "Aggiornato: " +
+        (generated ? generated.toLocaleString("it-IT") : "n/d") +
+        (spot.stale ? " <strong>(dati precedenti)</strong>" : "");
 
-</script>
+      const origin = spot.origin || {};
+      document.getElementById("attribution").textContent =
+        "Mappa © OpenStreetMap · Stazione/modello: " + (origin.latitude ?? "?") + "°, " +
+        (origin.longitude ?? "?") + "° · " +
+        (origin.distance ?? "?") + " km · " +
+        (spot.copyright || "");
+    }
 
+    function formatHeight(meters) {
+      if (typeof meters !== "number" || !isFinite(meters)) return "n/d";
+      const cm = Math.round(meters * 100);
+      return (cm > 0 ? "+" : "") + cm + " cm";
+    }
+
+    function getCurrentPosition() {
+      return new Promise((resolve, reject) => {
+        if (!navigator.geolocation) {
+          reject(new Error("geolocalizzazione non supportata"));
+          return;
+        }
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: true,
+          timeout: 12000,
+          maximumAge: 60000
+        });
+      });
+    }
+
+    async function position_then_tides() {
+      setLoader(true);
+      try {
+        const position = await getCurrentPosition();
+        state.userPosition = {
+          lat: position.coords.latitude,
+          lon: position.coords.longitude
+        };
+        const nearest = nearestSpot(state.userPosition.lat, state.userPosition.lon);
+        if (nearest) {
+          state.selectedSpot = nearest;
+          populateSpotSelect();
+          render();
+        }
+        document.getElementById("coordinates").textContent =
+          "Posizione: " + state.userPosition.lat.toFixed(4) + "°, " +
+          state.userPosition.lon.toFixed(4) + "°";
+      } catch (error) {
+        setStatus("Posizione non disponibile: " + error.message, true);
+      } finally {
+        setLoader(false);
+      }
+    }
+
+    function nearestSpot(lat, lon) {
+      if (!state.tides || !state.tides.spots) return null;
+      let best = null;
+      let bestDistance = Infinity;
+      for (const spot of state.tides.spots) {
+        const distance = haversine(lat, lon, spot.latitude, spot.longitude);
+        if (distance < bestDistance) {
+          bestDistance = distance;
+          best = spot;
+        }
+      }
+      return best;
+    }
+
+    function haversine(lat1, lon1, lat2, lon2) {
+      const earthRadiusKm = 6371;
+      const toRad = degrees => degrees * Math.PI / 180;
+      const dLat = toRad(lat2 - lat1);
+      const dLon = toRad(lon2 - lon1);
+      const a = Math.sin(dLat / 2) ** 2 +
+        Math.cos(toRad(lat1)) * Math.cos(toRad(lat2)) * Math.sin(dLon / 2) ** 2;
+      return 2 * earthRadiusKm * Math.asin(Math.sqrt(a));
+    }
+
+    function setLoader(visible) {
+      document.getElementById("loader").style.display = visible ? "block" : "none";
+    }
+
+    function setStatus(text, isError) {
+      const status = document.getElementById("status");
+      status.textContent = text || "";
+      status.className = isError ? "error" : "";
+    }
+  </script>
 </body>
 </html>

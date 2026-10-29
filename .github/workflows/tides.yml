@@ -1,0 +1,38 @@
+name: Update tides
+
+on:
+  schedule:
+    # Every 3 days at 03:00 UTC.
+    - cron: "0 3 */3 * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: tides
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch tides
+        env:
+          RAPIDAPI_KEY: ${{ secrets.RAPIDAPI_KEY }}
+        run: |
+          python3 tools/fetch_tides.py spots.json tides.json
+
+      - name: Commit tides.json
+        run: |
+          git config user.name "tides-bot"
+          git config user.email "tides-bot@users.noreply.github.com"
+          git add tides.json
+          if git diff --staged --quiet; then
+            echo "No tide changes to commit"
+          else
+            git commit -m "Update tides"
+            git push
+          fi
